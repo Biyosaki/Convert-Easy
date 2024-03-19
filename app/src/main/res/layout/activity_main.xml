@@ -193,11 +193,12 @@
                 android:textColor="@color/white"
                 android:textSize="32dp"
                 app:cornerRadius="5dp" />
+
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_converter"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_margin="12dp"
-                android:id="@+id/button_converter"
                 android:text="⬆⬇"
                 android:textColor="@color/white"
                 android:textSize="32dp"
