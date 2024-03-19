@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- Você pode mudar a cor do fundo se necessário -->
+    <stroke android:width="2dp" android:color="#000000"/> <!-- Defina a cor da borda que você deseja -->
+    <padding android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp" />
+    <corners android:radius="4dp"/> <!-- Define o quão arredondado são os cantos -->
+</shape>

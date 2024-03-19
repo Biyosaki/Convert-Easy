@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_celsius"
+        android:title="Graus Celsius" />
+    <item
+        android:id="@+id/menu_kelvin"
+        android:title="Kelvin" />
+    <item
+        android:id="@+id/menu_fahrenheit"
+        android:title="Fahrenheit" />
+</menu>

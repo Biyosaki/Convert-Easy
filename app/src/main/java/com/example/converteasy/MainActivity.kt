@@ -1,32 +1,84 @@
 package com.example.converteasy
-
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.converteasy.databinding.ActivityMainBinding
+import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var resultConvert: TextView
+    private lateinit var variableConvert: TextView
+    private var currentUnit = Unit.CELSIUS
 
-private lateinit var binding: ActivityMainBinding
+    enum class Unit(val symbol: String) {
+        CELSIUS("°C"),
+        KELVIN("K"),
+        FAHRENHEIT("°F")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-     binding = ActivityMainBinding.inflate(layoutInflater)
-     setContentView(binding.root)
+        resultConvert = findViewById(R.id.result_convert)
+        variableConvert = findViewById(R.id.variable_convert)
+        variableConvert.text = "0 °C"
+        resultConvert.text = "0 K"
 
-        val navView: BottomNavigationView = binding.navView
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+
+        findViewById<MaterialButton>(R.id.button_converter).setOnClickListener{}
+        // Setar os listeners para os botões numéricos e AC
+        setNumericAndACButtonListeners()
+
+
+        // Alterar unidade ao clicar nas TextViews
+        variableConvert.setOnClickListener {
+            // Implementação opcional para escolher a unidade para 'variableConvert'
+        }
+        resultConvert.setOnClickListener {
+            // Implementação opcional para escolher a unidade para 'resultConvert'
+
+        }
     }
+
+    private fun setNumericAndACButtonListeners() {
+        val buttonsIds = listOf(R.id.button_0, R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4,
+            R.id.button_5, R.id.button_6, R.id.button_7, R.id.button_8, R.id.button_9, R.id.button_AC)
+
+        buttonsIds.forEach { buttonId ->
+            findViewById<MaterialButton>(buttonId).setOnClickListener { button ->
+                onNumericAndACButtonClick(button)
+            }
+        }
+    }
+
+    private fun onNumericAndACButtonClick(button: View) {
+        if (button.id == R.id.button_AC) {
+            // Reset para os valores iniciais
+            variableConvert.text = "0 °C"
+            resultConvert.text = "0 K"
+        } else if (button is MaterialButton) {
+            val number = button.text.toString()
+            val currentValue = variableConvert.text.toString().dropLast(3).trim() // Remove " °C"
+
+            val newValue = if (currentValue == "0") {
+                number // Substitui o zero
+            } else {
+                currentValue + number // Concatena o novo número
+            }
+
+            variableConvert.text = "$newValue °C"
+            updateConversion(newValue.toDouble())
+        }
+    }
+
+    private fun updateConversion(celsius: Double) {
+        // Converte de Celsius para Kelvin
+        val kelvinValue = celsius + 273.15
+        resultConvert.text = "$kelvinValue K"
+    }
+
+
 }

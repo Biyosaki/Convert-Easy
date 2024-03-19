@@ -1,41 +1,85 @@
 package com.example.converteasy.ui.dashboard
 
+import com.example.converteasy.R
+
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.converteasy.databinding.FragmentDashboardBinding
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
-class DashboardFragment : Fragment() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var resultConvert: TextView
+    private lateinit var variableConvert: TextView
+    private var currentUnit = Unit.REAIS
 
-private var _binding: FragmentDashboardBinding? = null
-  // This property is only valid between onCreateView and
-  // onDestroyView.
-  private val binding get() = _binding!!
-
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-
-    _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-    val root: View = binding.root
-
-    val textView: TextView = binding.textDashboard
-    dashboardViewModel.text.observe(viewLifecycleOwner) {
-      textView.text = it
+    enum class Unit(val symbol: String) {
+        REAIS("R$"),
+        DOLAR("US$"),
+        FAHRENHEIT("˚F")
     }
-    return root
-  }
 
-override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        resultConvert = findViewById(R.id.result_convert)
+        variableConvert = findViewById(R.id.variable_convert)
+        variableConvert.text = "R$ 0"
+        resultConvert.text = "US$ 0"
+
+        findViewById<MaterialButton>(R.id.button_converter).setOnClickListener{}
+        // Setar os listeners para os botões numéricos e AC
+        setNumericAndACButtonListeners()
+
+
+        // Alterar unidade ao clicar nas TextViews
+        variableConvert.setOnClickListener {
+            // Implementação opcional para escolher a unidade para 'variableConvert'
+        }
+        resultConvert.setOnClickListener {
+            // Implementação opcional para escolher a unidade para 'resultConvert'
+        }
     }
+
+    private fun setNumericAndACButtonListeners() {
+        val buttonsIds = listOf(
+            R.id.button_0, R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4,
+            R.id.button_5, R.id.button_6, R.id.button_7, R.id.button_8, R.id.button_9, R.id.button_AC)
+
+        buttonsIds.forEach { buttonId ->
+            findViewById<MaterialButton>(buttonId).setOnClickListener { button ->
+                onNumericAndACButtonClick(button)
+            }
+        }
+    }
+
+    private fun onNumericAndACButtonClick(button: View) {
+        if (button.id == R.id.button_AC) {
+            // Reset para os valores iniciais
+            variableConvert.text = "R$ 0"
+            resultConvert.text = "US$ 0 "
+        } else if (button is MaterialButton) {
+            val number = button.text.toString()
+            val currentValue = variableConvert.text.toString().dropLast(3).trim() // Remove " °C"
+
+            val newValue = if (currentValue == "0") {
+                number // Substitui o zero
+            } else {
+                currentValue + number // Concatena o novo número
+            }
+
+            variableConvert.text = "R$ $newValue"
+            updateConversion(newValue.toDouble())
+        }
+    }
+
+    private fun updateConversion(celsius: Double) {
+        // Converte de Celsius para Kelvin
+        val kelvinValue = celsius * 4.80
+        resultConvert.text = "US$ $kelvinValue "
+    }
+
+
 }
