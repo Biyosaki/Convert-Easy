@@ -93,7 +93,10 @@ class TerceiraTela : AppCompatActivity() {
 
     private fun convertAndDisplay() {
         val valueInReais = variableConvert.text.toString().drop(3).replace(",", ".").toDoubleOrNull() ?: 0.0
-        val convertedValue = valueInReais / conversionRate
+        // Ajustar a taxa de conversão ou a operação para refletir o cálculo desejado
+        val conversionFactor = 2.0 // Este é um exemplo, ajuste conforme necessário para o seu caso
+        val convertedValue = valueInReais * conversionFactor // Alterado para multiplicar pelo fator
         resultConvert.text = "US$ ${String.format("%.2f", convertedValue).replace(".", ",")}"
     }
+
 }
